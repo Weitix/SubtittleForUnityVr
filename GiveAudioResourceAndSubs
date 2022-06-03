@@ -1,0 +1,52 @@
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class GiveAudioResource : MonoBehaviour
+{
+
+    public AudioController Audio;
+    public AudioClip clip;
+    public KeyCode[] keysToListenFor;
+    List<KeyCode> keyCodesThisFrame = new List<KeyCode>();
+
+    [TextArea(4, 12)]
+    public string[] _allSubsik;
+
+    private void Update()
+    {
+        Event();
+    }
+
+    public void Event()
+    {
+        keyCodesThisFrame.Clear();
+        if (keysToListenFor.Length == 0)
+        {
+            keysToListenFor = Enum.GetValues(typeof(KeyCode)) as KeyCode[];
+        }
+
+        foreach (KeyCode key in keysToListenFor)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                keyCodesThisFrame.Add(key);
+            }
+        }
+
+        foreach (var key in keyCodesThisFrame)
+        {
+            switch (key)
+            {
+                case KeyCode.UpArrow:
+                    EventManager.StartSubtittleEvent(clip, _allSubsik);
+                    Audio.Call();
+                    break;
+                case KeyCode.DownArrow:
+                    EventManager.StartSubtittleEvent(clip, _allSubsik);
+                    Audio.Call();
+                    break;
+            }
+        }
+    } 
+}
