@@ -1,0 +1,23 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class EventManager : MonoBehaviour
+{
+   
+
+    public static event Action<int> OpenDoorEvent;
+
+    public static event Action<AudioClip,string[]> SubtittleEvent;
+
+    public static void StartDoorEvent(int id)
+    {
+        OpenDoorEvent?.Invoke(id);
+    }
+
+    public static void StartSubtittleEvent( AudioClip _AudioExample,string[] _subtittle)
+    {
+        SubtittleEvent?.Invoke( _AudioExample, _subtittle);
+    }
+}
