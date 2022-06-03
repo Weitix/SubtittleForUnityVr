@@ -1,0 +1,76 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+    public class AudioController : MonoBehaviour
+{
+    private AudioSource mainAudio;
+    public AudioClip As;
+    public TextMesh _outputText;
+    public string[] _subtittleForOutput;
+    public Vector3 _moveVectorDown;
+    public GameObject _DownScroller;
+    public bool check = false;
+    void Start()
+    {
+        EventManager.SubtittleEvent += _subtittleActive;
+        mainAudio = transform.GetComponent<AudioSource>();
+
+        _DownScroller = transform.GetChild(0).gameObject;
+        _moveVectorDown = new Vector3(_DownScroller.transform.localPosition.x, _DownScroller.transform.localPosition.y + 3, _DownScroller.transform.localPosition.z);
+    }
+    private void _subtittleActive(AudioClip _as, string[] _allSubs)
+    {
+        As = _as;
+        _subtittleForOutput = _allSubs;
+
+        if (As!)
+        {
+            mainAudio.clip = As;
+            mainAudio.Play();  
+        }
+    }
+
+    private void Update()
+    {
+        _moveTextEvent();
+    }
+
+    public void _moveTextEvent()
+    {
+            if (check)
+            {
+              _DownScroller.transform.localPosition = Vector3.Lerp(_DownScroller.transform.localPosition, _moveVectorDown, 3 * Time.deltaTime);
+            }
+    }
+
+    public IEnumerator Wait(float sec)
+    {
+        for (int i = 0; i <= _subtittleForOutput.Length; i++)
+        {
+            
+            _outputText.text = _subtittleForOutput[i].ToString();
+
+                yield return new WaitForSeconds(sec);
+                yield return _DownScroller.transform.localPosition = new Vector3(_moveVectorDown.x, _moveVectorDown.y - 3, _moveVectorDown.z);
+
+            if (_outputText!)
+            {
+                _DownScroller.GetComponent<TextMesh>().text = _subtittleForOutput[i + 2].ToString();
+                check = true;
+            }
+
+           
+        }
+}
+
+    public void Call()
+    {
+        StartCoroutine(Wait(3.0f));
+    }
+
+   
+}
