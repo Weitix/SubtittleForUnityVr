@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
+using System;
+
+public class TextGoPoint : MonoBehaviour
+{
+    private RaycastHit _hit;
+    private Transform[] FollowText;
+    private Vector3 _scaleChange;
+    private Transform _startPos;
+    private Vector3 _soc;
+    public GameObject _originPos;
+    [SerializeField] private int dist;
+    private void Start()
+    {
+        Transform[] childArray = GetComponentsInChildren<Transform>(true);
+        FollowText = childArray;
+        _startPos = FollowText[2].transform;
+        _soc = _originPos.transform.localPosition;
+    }
+
+    private void Update()
+    {
+        
+        cathceHit();
+    }
+
+    public void cathceHit()
+    {
+        _scaleChange = new Vector3(FollowText[2].transform.localScale.x, FollowText[2].transform.localScale.y, FollowText[2].transform.localScale.z);
+
+        Ray ray = new Ray(transform.position, transform.forward * dist);
+        Debug.DrawRay(transform.position, transform.forward * dist, Color.red);
+
+        if (Physics.Raycast(ray, out _hit))
+        {
+            if (_hit.transform.GetComponent<PointLockText>() == true)
+            {
+                _startPos.position = Vector3.Lerp(_startPos.position, _hit.transform.position, 3 * Time.deltaTime);
+                _startPos.localScale = _scaleChange;
+            }
+            else
+            {
+                MoveDownForm();
+            }
+        }
+        else
+        {
+            MoveDownForm();
+        }
+    }
+
+    void MoveDownForm()
+    {
+        _startPos.localPosition = Vector3.Lerp(_startPos.localPosition, _soc, 3f * Time.deltaTime);
+    }
+}
